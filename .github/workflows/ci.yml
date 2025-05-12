@@ -1,0 +1,31 @@
+# Basic CI workflow for linting Markdown and uploading the report
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repo so we can access the files
+      - uses: actions/checkout@v4
+
+      # 2. Run markdown lint and output JSON report
+      - name: Run markdown lint
+        run: |
+          npm install remark-cli remark-preset-lint-consistent vfile-reporter-json --no-audit --no-fund
+          # Generate JSON report for any lint issues
+          npx remark . --use remark-preset-lint-consistent --report vfile-reporter-json 2> remark-lint-report.json
+
+      # 3. Upload the JSON report as an artifact
+      - name: Upload lint report
+        uses: actions/upload-artifact@v4
+        with:
+          name: remark-lint-report
+          path: remark-lint-report.json
