@@ -14,7 +14,7 @@ jobs:
 
     steps:
       # 1. Check out the repo so we can access the files
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # 2. Run markdown lint and output JSON report
       - name: Run markdown lint
